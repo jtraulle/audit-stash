@@ -22,4 +22,4 @@ require $root . '/vendor/cakephp/cakephp/tests/bootstrap.php';
 
 use Cake\Datasource\ConnectionManager;
 
-ConnectionManager::config('test_elastic', ['url' => getenv('elastic_dsn')]);
+ConnectionManager::setConfig('test_elastic', ['url' => getenv('elastic_dsn')]);

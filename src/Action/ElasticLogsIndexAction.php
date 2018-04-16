@@ -23,7 +23,7 @@ class ElasticLogsIndexAction extends IndexAction
         $request = $this->_request();
         $this->_configIndex($this->_table(), $request);
         $query = $this->_table()->find();
-        $repository = $query->repository();
+        $repository = $query->getRepository();
 
         $query->searchOptions(['ignore_unavailable' => true]);
 

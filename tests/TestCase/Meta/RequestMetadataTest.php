@@ -4,14 +4,14 @@ namespace AuditStash\Test\Persister;
 
 use AuditStash\Event\AuditDeleteEvent;
 use AuditStash\Meta\RequestMetadata;
-use Cake\Event\EventManagertrait;
-use Cake\Network\Request;
+use Cake\Event\EventDispatcherTrait;
+use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 
 class RequestMetadataTest extends TestCase
 {
 
-    use EventManagertrait;
+    use EventDispatcherTrait;
 
     /**
      * Tests that request metadata is added to the audit log objects.
@@ -20,9 +20,11 @@ class RequestMetadataTest extends TestCase
      */
     public function testRequestDataIsAdded()
     {
-        $request = $this->getMock(Request::class, ['clientIp', 'here']);
+        $request = $this->getMockBuilder(ServerRequest::class)
+                        ->setConstructorArgs(['clientIp', 'here'])
+                        ->getMock();
         $listener = new RequestMetadata($request, 'jose');
-        $this->eventManager()->attach($listener);
+        $this->getEventManager()->on($listener);
 
         $request->expects($this->once())->method('clientIp')->will($this->returnValue('12345'));
         $request->expects($this->once())->method('here')->will($this->returnValue('/things?a=b'));

@@ -47,7 +47,7 @@ class DatabasePersister implements PersisterInterface
                 'changed' => $eventType === 'delete' ? null : json_encode($log->getChanged()),
                 'meta' => json_encode($meta)
             ];
-            $Audit = TableRegistry::get('Audits');
+            $Audit = TableRegistry::getTableLocator()->get('Audits');
             if (!empty($meta['user'])) {
                 $data['user_id'] = $meta['user'];
             }

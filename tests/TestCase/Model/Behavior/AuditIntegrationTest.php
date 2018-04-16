@@ -42,7 +42,7 @@ class AuditIntegrationTest extends TestCase
      */
     public function setUp()
     {
-        $this->table = TableRegistry::get('Articles');
+        $this->table = TableRegistry::getTableLocator()->get('Articles');
         $this->table->hasMany('Comments');
         $this->table->belongsToMany('Tags');
         $this->table->belongsTo('Authors');
@@ -50,7 +50,7 @@ class AuditIntegrationTest extends TestCase
             'className' => AuditLogBehavior::class
         ]);
 
-        $this->persister = $this->getMock(DebugPersister::class);
+        $this->persister = $this->getMockBuilder(DebugPersister::class)->getMock();
         $this->table->behaviors()->get('AuditLog')->persister($this->persister);
     }
 
@@ -249,7 +249,7 @@ class AuditIntegrationTest extends TestCase
             'user_id' => 1,
             'comment' => 'This is another comment'
         ]);
-        $entity->dirty('comments', true);
+        $entity->setDirty('comments', true);
 
         $this->persister
             ->expects($this->once())
@@ -344,7 +344,7 @@ class AuditIntegrationTest extends TestCase
             'name' => 'This is a Tag'
         ]);
         $entity->tags[] = $this->table->Tags->get(3);
-        $entity->dirty('tags', true);
+        $entity->setDirty('tags', true);
 
         $this->persister
             ->expects($this->once())
@@ -404,11 +404,11 @@ class AuditIntegrationTest extends TestCase
             'contain' => ['Comments', 'Tags']
         ]);
 
-        $this->table->Comments->dependent(true);
-        $this->table->Comments->cascadeCallbacks(true);
+        $this->table->Comments->setDependent(true);
+        $this->table->Comments->setCascadeCallbacks(true);
 
-        $this->table->Tags->dependent(true);
-        $this->table->Tags->cascadeCallbacks(true);
+        $this->table->Tags->setDependent(true);
+        $this->table->Tags->setCascadeCallbacks(true);
 
         $this->persister
             ->expects($this->once())

@@ -4,13 +4,13 @@ namespace AuditStash\Test\Meta;
 
 use AuditStash\Event\AuditDeleteEvent;
 use AuditStash\Meta\ApplicationMetadata;
-use Cake\Event\EventManagerTrait;
+use Cake\Event\EventDispatcherTrait;
 use Cake\TestSuite\TestCase;
 
 class ApplicationMetadataTest extends TestCase
 {
 
-    use EventManagerTrait;
+    use EventDispatcherTrait;
 
     /**
      * Tests that metadata is added to the audit log objects.
@@ -20,7 +20,7 @@ class ApplicationMetadataTest extends TestCase
     public function testDataIsAdded()
     {
         $listener = new ApplicationMetadata('my_app', ['extra' => 'thing']);
-        $this->eventManager()->attach($listener);
+        $this->getEventManager()->on($listener);
         $logs[] = new AuditDeleteEvent(1234, 1, 'articles');
         $event = $this->dispatchEvent('AuditStash.beforeLog', ['logs' => $logs]);
 

@@ -19,7 +19,7 @@ class ElasticImportTask extends Shell
     public function getOptionParser()
     {
         return parent::getOptionParser()
-            ->description('Imports audit logs from the legacy audit logs tables into elastic search')
+            ->setDescription('Imports audit logs from the legacy audit logs tables into elastic search')
             ->addOption('from', [
                 'short' => 'f',
                 'help' => 'The date from which to start importing audit logs',
@@ -106,8 +106,8 @@ class ElasticImportTask extends Shell
             })
             ->matching('AuditDeltas')
             ->order(['Audits.created', 'AuditDeltas.audit_id'])
-            ->bufferResults(false)
-            ->hydrate(false)
+            ->enableBufferedResults(false)
+            ->enableHydration(false)
             ->unfold(function ($audit) use ($buffer, &$currentId) {
                 if ($currentId && $currentId !== $audit['id']) {
                     yield collection($buffer)->toList();

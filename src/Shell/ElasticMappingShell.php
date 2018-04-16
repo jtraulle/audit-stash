@@ -19,7 +19,7 @@ class ElasticMappingShell extends Shell
     public function getOptionParser()
     {
         return parent::getOptionParser()
-            ->description('Creates type mappings in elastic search for the tables you want tracked with audit logging')
+            ->setDescription('Creates type mappings in elastic search for the tables you want tracked with audit logging')
             ->addArgument('table', [
                 'short' => 't',
                 'help' => 'The name of the database table to inspect and create a mapping for',
@@ -46,8 +46,8 @@ class ElasticMappingShell extends Shell
      */
     public function main($table)
     {
-        $table = TableRegistry::get($table);
-        $schema = $table->schema();
+        $table = TableRegistry::getTableLocator()->get($table);
+        $schema = $table->getSchema();
         $mapping = [
             '@timestamp' => ['type' => 'date', 'format' => 'basic_t_time_no_millis||dateOptionalTime||basic_date_time||ordinal_date_time_no_millis||yyyy-MM-dd HH:mm:ss'],
             'transaction' => ['type' => 'string', 'index' => 'not_analyzed'],
@@ -86,7 +86,7 @@ class ElasticMappingShell extends Shell
         $mapping['original']['properties'] = $mapping['changed']['properties'] = $properties;
         $client = ConnectionManager::get('auditlog_elastic');
         $index = $client->getIndex(sprintf($client->getConfig('index'), '-' . gmdate('Y.m.d')));
-        $type = $index->getType($table->table());
+        $type = $index->getType($table->getTable());
         $elasticMapping = new ElasticaMapping();
         $elasticMapping->setType($type);
         $elasticMapping->setProperties($mapping);
