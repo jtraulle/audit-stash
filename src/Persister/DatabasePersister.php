@@ -1,8 +1,8 @@
 <?php
 namespace AuditStash\Persister;
 
-use Cake\ORM\TableRegistry;
 use AuditStash\PersisterInterface;
+use Cake\Datasource\ModelAwareTrait;
 use DateTime;
 
 /**
@@ -12,9 +12,11 @@ use DateTime;
  *
  * @package App\Persister
  * @author Cake Development Corporation
+ * @deprecated Use \AuditStash\Persister\TablePersister instead.
  */
 class DatabasePersister implements PersisterInterface
 {
+    use ModelAwareTrait;
 
     /**
      * Persists all of the audit log event objects that are provided
@@ -47,7 +49,7 @@ class DatabasePersister implements PersisterInterface
                 'changed' => $eventType === 'delete' ? null : json_encode($log->getChanged()),
                 'meta' => json_encode($meta)
             ];
-            $Audit = TableRegistry::getTableLocator()->get('Audits');
+            $Audit = $this->loadModel('Audits');
             if (!empty($meta['user'])) {
                 $data['user_id'] = $meta['user'];
             }

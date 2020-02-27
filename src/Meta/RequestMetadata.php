@@ -4,7 +4,7 @@ namespace AuditStash\Meta;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest as Request;
 
 /**
  * Event listener that is capable of enriching the audit logs
@@ -44,7 +44,7 @@ class RequestMetadata implements EventListenerInterface
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return ['AuditStash.beforeLog' => 'beforeLog'];
     }
@@ -61,7 +61,7 @@ class RequestMetadata implements EventListenerInterface
     {
         $meta = [
             'ip' => $this->request->clientIp(),
-            'url' => $this->request->here(),
+            'url' => $this->request->getRequestTarget(),
             'user' => $this->user
         ];
 

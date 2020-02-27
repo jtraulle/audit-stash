@@ -4,7 +4,7 @@ namespace AuditStash\Test\Fixture;
 
 use Cake\ElasticSearch\TestSuite\TestFixture;
 
-class ElasticTagsFixture extends TestFixture
+class ElasticAuditsFixture extends TestFixture
 {
 
     public $connection = 'test_elastic';
@@ -14,7 +14,7 @@ class ElasticTagsFixture extends TestFixture
      *
      * @var string
      */
-    public $table = 'tag';
+    public $table = 'audit';
 
     /**
      * The mapping data.
